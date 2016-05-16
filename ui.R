@@ -1,13 +1,16 @@
 shinyUI(fluidPage(
-  titlePanel("BAAD Viz"),
-  fluidRow(
+  titlePanel("Visualize BAAD"),
+
+  plotOutput("baadplot"),
+  textOutput("text1"),
+  hr(),
+  
+    fluidRow(
     column(3,
-      wellPanel(
         h4("Filter"),
-        sliderInput("minht", "Minimum tree height",
-          0, 120, 0, step = 10),
         selectInput("vegetation", "Vegetation Type",
-          c("All","BorF","TropRF","TempF","Sh","TropSF","Wo","TempRF","Sav","Gr")
+          c("All", unique(baad$vegetation[!is.na(baad$vegetation)])),
+          selected="All"
         ),
         checkboxGroupInput("growingCondition", "Growing Environment:",
                            c("Plantation, managed" = "PM",
@@ -17,22 +20,30 @@ shinyUI(fluidPage(
                              "Plantation, unmanaged" = "PU",
                              "Common garden" = "CG",
                              "Unclassified" = ""),
-                           selected=c("PM","FW","GH","FE","PU","CG","")),
-        
-        textInput("studyName", "Name of study (e.g. Burger1953)")
+                           selected=c("PM","FW","GH","FE","PU","CG",""))
       ),
-      wellPanel(
+      column(3,
         selectInput("xvar", "X-axis variable", dictio$variable, selected = "h.t"),
         checkboxInput("logxvar","Log-transform X variable",TRUE),
         selectInput("yvar", "Y-axis variable", dictio$variable, selected = "m.lf"),
         checkboxInput("logyvar","Log-transform Y variable",TRUE)
-      )
+      ),
+    column(3,
+           selectInput("studyName", "Study name:", 
+                       c("All",sort(unique(baad$studyName))),
+                       selected="All"),
+           selectInput("studyName2", "Second study name:", 
+                       c("None",sort(unique(baad$studyName))),
+                       selected="None")
     ),
-    mainPanel(
-      plotOutput("baadplot"),
-      textOutput("text1")
+    column(3,
+           selectInput("colorby", "Set colour by:",
+                       c("None","Plant functional type","Vegetation","Study Name"),
+                       selected="None"
+                       ))
+    
     )
+
     
     
-  )
-))
+  ))
