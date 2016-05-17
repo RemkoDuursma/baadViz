@@ -1,5 +1,3 @@
-library(magicaxis)
-library(scales)
 
 shinyServer(function(input, output, session) {
 
@@ -11,15 +9,8 @@ shinyServer(function(input, output, session) {
     studyName <- input$studyName
     studyName2 <- input$studyName2
     colorby <- input$colorby
-    baad$pft <- as.factor(baad$pft)
+    baad$pft <- as.factor(baad$pft) # Factor here; want to keep empties for PFT
 
-    # Do PFT here, because we want specific colours    
-    if(input$colorby == "Plant functional type"){
-      pftpal <- c("#01ABE9","chartreuse","#1B346C","#F34B1A")
-      baad$Colour <- alpha(pftpal,0.7)[baad$pft]
-    }
-
-        
     if(vegetation != "All")baad <- baad[baad$vegetation %in% vegetation,]
     baad <- baad[baad$growingCondition %in% growingCondition,]
     if(studyName != "All" && studyName2 == "None"){
@@ -33,37 +24,55 @@ shinyServer(function(input, output, session) {
   })
   
   baadplot_fun <- function(input){
-    #xvar_name <- names(axis_vars)[axis_vars == input$xvar]
-    #yvar_name <- names(axis_vars)[axis_vars == input$yvar]
     
     b <- baaddat()
+    b$X <- b[,input$xvar]
+    b$Y <- b[,input$yvar]
+    b <- b[!is.na(b$X) & !is.na(b$Y),]
     
-    X <- b[,input$xvar]
-    Y <- b[,input$yvar]
-    b <- b[!is.na(X)&!is.na(Y),]
+    palfun <- get(input$pchpalette)
+    
     if(nrow(b) == 0)return(NULL)
 
     if(input$colorby == "Study Name"){
       b$studyName <- as.factor(b$studyName)
-      b$Colour <- rainbow(nlevels(b$studyName))[b$studyName]
+      pal <- palfun(nlevels(b$studyName))
+      b$Colour <- pal[b$studyName]
+      legendfun <- function()legend("topleft", levels(b$studyName), col=pal, pch=19, cex=0.8)
     }
     if(input$colorby == "Vegetation"){
-      b$Vegetation <- as.factor(b$Vegetation)
-      b$Colour <- rainbow(nlevels(b$Vegetation))[n$Vegetation]
+      b$vegetation <- as.factor(b$vegetation)
+      pal <- palfun(nlevels(b$vegetation))
+      legendfun <- function()legend("topleft", levels(b$vegetation), col=pal, pch=19, cex=0.8)
+      b$Colour <- pal[b$vegetation]
     }
-    
+    if(input$colorby == "Species"){
+      b$speciesMatched <- as.factor(b$speciesMatched)
+      pal <- palfun(nlevels(b$speciesMatched))
+      legendfun <- function()legend("topleft", levels(b$speciesMatched), col=pal, pch=19, cex=0.8)
+      b$Colour <- pal[b$speciesMatched]
+    }
+    if(input$colorby == "Plant functional type"){
+      
+      pftpal <- alpha(c("#01ABE9","chartreuse","#1B346C","#F34B1A"),0.7)
+      b$Colour <- pftpal[b$pft]
+      legendfun <- function()legend("topleft", 
+                                    c("Decid. Angio.","Decid. Gymno.","Evergr. Angio.","Evergr. Gymno."), 
+                                    col=c("#01ABE9","chartreuse","#1B346C","#F34B1A"), pch=19, cex=0.8)
+    }
     if(input$colorby == "None"){
       b$Colour <- alpha("black", 0.5)
     }
     
     
-    if(input$logxvar && is.numeric(X))X <- log10(X)
-    if(input$logyvar && is.numeric(Y))Y <- log10(Y)
+    if(input$logxvar && is.numeric(b$X))b$X <- log10(b$X)
+    if(input$logyvar && is.numeric(b$Y))b$Y <- log10(b$Y)
     
-    x_lab <- dictio$label[dictio$variable == input$xvar]
-    y_lab <- dictio$label[dictio$variable == input$yvar]
+    x_lab <- baad_vars_label[baad_vars == input$xvar]
+    y_lab <- baad_vars_label[baad_vars == input$yvar]
     
-    plot(X,Y, axes=FALSE, xlab=x_lab, ylab=y_lab, pch=19, col=b$Colour)
+    plot(b$X,b$Y, axes=FALSE, xlab=x_lab, ylab=y_lab, pch=19, col=b$Colour)
+    if(exists('legendfun'))legendfun()
     if(input$logxvar)magaxis(1,unlog=1) else axis(1)
     if(input$logyvar)magaxis(2,unlog=2) else axis(2)
   }

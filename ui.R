@@ -7,7 +7,6 @@ shinyUI(fluidPage(
   
     fluidRow(
     column(3,
-        h4("Filter"),
         selectInput("vegetation", "Vegetation Type",
           c("All", unique(baad$vegetation[!is.na(baad$vegetation)])),
           selected="All"
@@ -23,9 +22,9 @@ shinyUI(fluidPage(
                            selected=c("PM","FW","GH","FE","PU","CG",""))
       ),
       column(3,
-        selectInput("xvar", "X-axis variable", dictio$variable, selected = "h.t"),
+        selectInput("xvar", "X-axis variable", baad_vars, selected = "h.t"),
         checkboxInput("logxvar","Log-transform X variable",TRUE),
-        selectInput("yvar", "Y-axis variable", dictio$variable, selected = "m.lf"),
+        selectInput("yvar", "Y-axis variable", baad_vars, selected = "m.lf"),
         checkboxInput("logyvar","Log-transform Y variable",TRUE)
       ),
     column(3,
@@ -38,9 +37,13 @@ shinyUI(fluidPage(
     ),
     column(3,
            selectInput("colorby", "Set colour by:",
-                       c("None","Plant functional type","Vegetation","Study Name"),
+                       c("None","Species","Plant functional type","Vegetation","Study Name"),
                        selected="None"
-                       ))
+                       ),
+           selectInput("pchpalette", "Palette:",
+                       c("rainbow","rich.colors")
+                       )
+    )
     
     )
 
