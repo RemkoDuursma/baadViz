@@ -85,5 +85,16 @@ shinyServer(function(input, output, session) {
     baadplot_fun(input)
   )
   
+  output$downloadplot <- downloadHandler(
+    filename = function(){
+      "baadplot.png"
+    },
+    content = function(file) {
+      png(file)
+      baadplot_fun(input)
+      dev.off()
+    }
+  )
+  
   
 })

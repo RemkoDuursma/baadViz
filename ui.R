@@ -2,6 +2,8 @@ shinyUI(fluidPage(
   titlePanel("Visualize BAAD"),
 
   plotOutput("baadplot"),
+  downloadButton('downloadplot','Save plot (PNG)'),
+  hr(),
   textOutput("text1"),
   hr(),
   
