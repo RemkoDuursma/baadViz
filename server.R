@@ -26,8 +26,14 @@ shinyServer(function(input, output, session) {
   baadplot_fun <- function(input){
     
     b <- baaddat()
-    b$X <- b[,input$xvar]
-    b$Y <- b[,input$yvar]
+    
+    xi <- which(baad_vars_label == input$xvar)
+    yi <- which(baad_vars_label == input$yvar)
+    xvar <- baad_vars[xi]
+    yvar <- baad_vars[yi]
+    
+    b$X <- b[,xvar]
+    b$Y <- b[,yvar]
     b <- b[!is.na(b$X) & !is.na(b$Y),]
     
     palfun <- get(input$pchpalette)
@@ -64,12 +70,11 @@ shinyServer(function(input, output, session) {
       b$Colour <- alpha("black", 0.5)
     }
     
-    
     if(input$logxvar && is.numeric(b$X))b$X <- log10(b$X)
     if(input$logyvar && is.numeric(b$Y))b$Y <- log10(b$Y)
     
-    x_lab <- baad_vars_axis_label[baad_vars == input$xvar]
-    y_lab <- baad_vars_axis_label[baad_vars == input$yvar]
+    x_lab <- baad_vars_axis_label[xi]
+    y_lab <- baad_vars_axis_label[yi]
     
     plot(b$X,b$Y, axes=FALSE, xlab=x_lab, ylab=y_lab, pch=19, col=b$Colour)
     if(exists('legendfun'))legendfun()

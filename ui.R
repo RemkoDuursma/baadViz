@@ -24,9 +24,9 @@ shinyUI(fluidPage(
                            selected=c("PM","FW","GH","FE","PU","CG",""))
       ),
       column(3,
-        selectInput("xvar", "X-axis variable", baad_vars, selected = "h.t"),
+        selectInput("xvar", "X-axis variable", baad_vars_label, selected = "height"),
         checkboxInput("logxvar","Log-transform X variable",TRUE),
-        selectInput("yvar", "Y-axis variable", baad_vars, selected = "m.lf"),
+        selectInput("yvar", "Y-axis variable", baad_vars_label, selected = "leaf mass"),
         checkboxInput("logyvar","Log-transform Y variable",TRUE)
       ),
     column(3,

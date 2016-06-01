@@ -33,7 +33,7 @@ baad_vars <- c(extravars, dictio$variable)
 baad_units <- c("kg/m2","m2/kg","kg/kg","m2/kg","m2/kg","kg/kg","kg/kg",
                 "m2/m2","kg/m2","m2/m2","kg/m2",dictio$units)
 
-extra_labels <- c("leaf mass per area","specific leaf area",
+extra_labels <- c("leaf mass per area (recalc.)","specific leaf area",
                   "root mass / total mass","leaf area / stem mass",
                   "leaf area / total mass","leaf mass / total mass",
                   "leaf mass / stem mass", "leaf area / stem basal area",
