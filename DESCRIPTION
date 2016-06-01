@@ -1,6 +1,9 @@
-Title: Visualize BAAD
-Author: Remko Duursma <remkoduursma@gmail.com>
-AuthorUrl: http://www.remkoduursma.com
-License: MIT
-Type: Shiny
-Tags: sliderinput
+Package: baadviz
+Type: Package
+Title: Visualize the BAAD, not badly
+Version: 0.1
+Author: Remko Duursma
+Maintainer: Remko Duursma <remkoduursma@gmail.com>
+Description: A shiny app to visualize the Biomass And Allometry Database
+Depends: shiny, gplots
+RoxygenNote: 5.0.1
