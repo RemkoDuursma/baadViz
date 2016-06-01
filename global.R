@@ -7,6 +7,9 @@ baad_all <- baad_data("1.0.0")
 baad <- baad_all$data
 dictio <- baad_all$dictionary
 
+
+baad_vegetation_types <- unique(baad$vegetation[!is.na(baad$vegetation)])
+
 # Add variables:
 # Log-transform, add Group
 orig_names <- names(baad)

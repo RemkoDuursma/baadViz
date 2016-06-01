@@ -10,7 +10,7 @@ shinyUI(fluidPage(
     fluidRow(
     column(3,
         selectInput("vegetation", "Vegetation Type",
-          c("All", unique(baad$vegetation[!is.na(baad$vegetation)])),
+          c("All", baad_vegetation_types),
           selected="All"
         ),
         checkboxGroupInput("growingCondition", "Growing Environment:",
@@ -30,6 +30,9 @@ shinyUI(fluidPage(
         checkboxInput("logyvar","Log-transform Y variable",TRUE)
       ),
     column(3,
+           radioButtons("howstudy", "How to use selection:",
+                        choices=list("Subset"="subset","Overlay"="overlay"),
+                        selected="subset"),
            selectInput("studyName", "Study name:", 
                        c("All",sort(unique(baad$studyName))),
                        selected="All"),

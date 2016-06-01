@@ -13,13 +13,14 @@ shinyServer(function(input, output, session) {
 
     if(vegetation != "All")baad <- baad[baad$vegetation %in% vegetation,]
     baad <- baad[baad$growingCondition %in% growingCondition,]
+  
     if(studyName != "All" && studyName2 == "None"){
       baad <- baad[baad$studyName == studyName,]
     }
     if(studyName != "All" && studyName2 != "None"){
       baad <- baad[baad$studyName %in% c(studyName,studyName2),]
     }
-
+    
   baad
   })
   
@@ -76,10 +77,22 @@ shinyServer(function(input, output, session) {
     x_lab <- baad_vars_axis_label[xi]
     y_lab <- baad_vars_axis_label[yi]
     
-    plot(b$X,b$Y, axes=FALSE, xlab=x_lab, ylab=y_lab, pch=19, col=b$Colour)
+    if(input$howstudy == "subset"){
+      plot(b$X,b$Y, axes=FALSE, xlab=x_lab, ylab=y_lab, pch=19, col=b$Colour)
+    } else {
+      
+      bX <- if(input$logxvar)log10(baad[,xvar]) else baad[,xvar]
+      bY <- if(input$logyvar)log10(baad[,yvar]) else baad[,yvar]
+      
+      plot(bX, bY, pch=16, col="lightgrey",
+           xlab=x_lab, ylab=y_lab,
+           axes=FALSE)
+      points(b$X,b$Y, pch=19, col=b$Colour)
+    }
     if(exists('legendfun'))legendfun()
     if(input$logxvar)magaxis(1,unlog=1) else axis(1)
     if(input$logyvar)magaxis(2,unlog=2) else axis(2)
+    
   }
 
   output$text1 <- renderText({ 
