@@ -68,8 +68,8 @@ shinyServer(function(input, output, session) {
     if(input$logxvar && is.numeric(b$X))b$X <- log10(b$X)
     if(input$logyvar && is.numeric(b$Y))b$Y <- log10(b$Y)
     
-    x_lab <- baad_vars_label[baad_vars == input$xvar]
-    y_lab <- baad_vars_label[baad_vars == input$yvar]
+    x_lab <- baad_vars_axis_label[baad_vars == input$xvar]
+    y_lab <- baad_vars_axis_label[baad_vars == input$yvar]
     
     plot(b$X,b$Y, axes=FALSE, xlab=x_lab, ylab=y_lab, pch=19, col=b$Colour)
     if(exists('legendfun'))legendfun()

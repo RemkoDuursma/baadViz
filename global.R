@@ -9,6 +9,7 @@ dictio <- baad_all$dictionary
 
 # Add variables:
 # Log-transform, add Group
+orig_names <- names(baad)
 baad <- within(baad, {
   
   mlf_astbh <- m.lf/a.stbh
@@ -25,6 +26,21 @@ baad <- within(baad, {
   lma <- m.lf / a.lf
   
 })
-extravars <- names(baad)[ncol(baad):(ncol(baad)-10)]
+extravars <- setdiff(names(baad), orig_names)
 baad_vars <- c(extravars, dictio$variable)
-baad_vars_label <- c(extravars, dictio$label)
+
+# Bit dangerous! Note that in within() variables are added in reverse.
+baad_units <- c("kg/m2","m2/kg","kg/kg","m2/kg","m2/kg","kg/kg","kg/kg",
+                "m2/m2","kg/m2","m2/m2","kg/m2",dictio$units)
+
+extra_labels <- c("leaf mass per area","specific leaf area",
+                  "root mass / total mass","leaf area / stem mass",
+                  "leaf area / total mass","leaf mass / total mass",
+                  "leaf mass / stem mass", "leaf area / stem basal area",
+                  "leaf mass / stem basal area", "leaf area / stem b-h area",
+                  "leaf mass / stem b-h area")
+
+baad_vars_label <- c(extra_labels, dictio$label)
+baad_vars_axis_label <- sprintf("%s (%s)", baad_vars_label, baad_units)
+
+
